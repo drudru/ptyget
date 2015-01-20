@@ -1,0 +1,7 @@
+substdio.o
+substdi.o
+substdo.o
+subfderr.o
+subfdout.o
+subfdin.o
+substdio_copy.o

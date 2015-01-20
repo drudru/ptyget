@@ -1,0 +1,18 @@
+ptyget 0.50, alpha.
+19960910
+Copyright 1996
+D. J. Bernstein, djb@pobox.com
+
+ptyget is a universal pseudo-terminal interface. It is designed to be
+used by any program that needs a pty. It can also serve as a wrapper to
+improve the behavior of existing programs. See BLURB for a more detailed
+advertisement.
+
+You may distribute unmodified copies of the ptyget package.
+
+INSTALL says how to set up and test ptyget.
+
+The rest of this file is a list of systypes where various versions of
+ptyget have been reported to work. 0.50 was the first alpha version.
+
+0.50: bsd.os-2.0.1-:i386-:-:pentium-:-

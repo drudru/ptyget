@@ -1,0 +1,19 @@
+.TH background 1
+.SH NAME
+background \- run program without waiting for it
+.SH SYNOPSIS
+.B background
+.I subprogram
+[
+.I args ...
+]
+.SH DESCRIPTION
+.B background
+runs
+.I subprogram
+as a child process (not a process group leader)
+and then exits without waiting for
+.I subprogram
+to finish.
+.SH "SEE ALSO"
+ttydetach(1)

@@ -1,0 +1,62 @@
+.TH ptyget 8
+.SH NAME
+ptyget \- allocate a pty
+.SH SYNOPSIS
+.B ptyget
+.I subprogram
+[
+.I args ...
+]
+.SH DESCRIPTION
+.B ptyget
+allocates a new pty,
+makes the master side available as fd 4 (non-blocking),
+makes the slave side available as fd 5,
+and runs
+.IR subprogram .
+It passes
+.I subprogram
+a TTY environment variable
+giving the name of the pty slave.
+
+On current systems,
+.B ptyget
+is setuid root and setgid tty.
+It changes the ownership of the pty slave to the user,
+so that the user can open it,
+and makes it mode 600,
+so that nobody else can open it.
+It also puts the pty slave under group tty.
+It will refuse to run if these protections fail.
+
+.B ptyget
+does not make any provisions to clean up when the
+user finishes using the pty.
+.SH "SYSTEM-SPECIFIC NOTES"
+On pty/tty-based systems (e.g., BSD 4.4),
+the slave is
+.B /dev/tty\fIxy
+where
+.I xy
+are two characters.
+.B ptyget
+searches through masters starting from a random point
+(with a random increment to avoid secondary clustering).
+.B ptyget
+relies for security on the kernel's
+.B revoke()
+function.
+
+On ptmx/pts-based systems (e.g., Solaris),
+the slave is 
+.B /dev/pts/\fIN
+where
+.I N
+is a nonnegative integer.
+.B ptyget
+does not invoke
+.BR /usr/lib/pt_chmod .
+.B ptyget
+relies for security on the kernel's built-in slave locking.
+.SH "SEE ALSO"
+ptyget(8)

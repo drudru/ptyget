@@ -1,0 +1,53 @@
+.TH ptyrun 1
+.SH NAME
+ptyrun \- wrap a pty around a program
+.SH SYNOPSIS
+.B ptyrun
+.I subprogram
+[
+.I args ...
+]
+.SH DESCRIPTION
+.B ptyrun
+obtains a new pty and runs
+.I subprogram
+under it,
+transparently forwarding input and output.
+.B ptyrun
+initializes the pty to sane mode.
+
+Descriptors 0, 1, and 2
+of
+.I subprogram
+are redirected to the pty;
+its controlling terminal is set to the pty;
+descriptor 3 is redirected to /dev/tty;
+environment variable TTY gives the name of the pty.
+
+When
+.I subprogram
+exits,
+.B ptyrun
+exits with the same exit code.
+If
+.I subprogram
+stops,
+.B ptyrun
+immediately sends SIGCONT to
+.IR subprogram 's
+process group.
+
+.B ptyrun
+is a synonym for
+.B ptyget
+.B ptyio
+.BR ptyspawn .
+Any
+.B ptyspawn
+options may be used with
+.BR ptyrun .
+.SH "SEE ALSO"
+ptybandage(1),
+ptyget(8),
+ptyio(8),
+ptyspawn(8)

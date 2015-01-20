@@ -1,0 +1,25 @@
+.TH exclon 1
+.SH NAME
+exclon \- reserve tty for exclusive use
+.SH SYNOPSIS
+.B exclon
+.SH DESCRIPTION
+.B exclon
+attempts to reserve your terminal for exclusive use.
+This means that any attempt to open your terminal,
+including through /dev/tty,
+will fail.
+
+Exception:
+root can still open your terminal.
+On most systems this means that
+.B talk
+is not affected by
+.B exclon
+even though
+.B write
+is.
+.SH "SEE ALSO"
+excloff(1),
+talk(1),
+write(1)

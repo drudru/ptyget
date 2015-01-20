@@ -1,0 +1,4 @@
+wait_pid.o
+wait_nohang.o
+wait_stop.o
+wait_snh.o

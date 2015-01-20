@@ -1,0 +1,21 @@
+.TH ttydetach 1
+.SH NAME
+ttydetach \- run program without a controlling tty
+.SH SYNOPSIS
+.B ttydetach
+.I subprogram
+[
+.I args ...
+]
+.SH DESCRIPTION
+.B ttydetach
+eliminates its controlling tty,
+removes any TTY variable from the environment,
+and runs
+.IR subprogram .
+
+On POSIX systems,
+.B ttydetach
+must not be a process group leader.
+.SH "SEE ALSO"
+background(1)

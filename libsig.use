@@ -1,0 +1,5 @@
+sig_block.o
+sig_catch.o
+sig_dfl.o
+sig_pipe.o
+sig_cont.o

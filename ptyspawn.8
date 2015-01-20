@@ -1,0 +1,75 @@
+.TH ptyspawn 8
+.SH NAME
+ptyspawn \- run a program under a pty
+.SH SYNOPSIS
+.B ptyspawn
+[
+.B \-23x
+]
+.I subprogram
+[
+.I args ...
+]
+.SH DESCRIPTION
+.B ptyspawn
+runs
+.I subprogram
+under a pty.
+.B ptyspawn
+will exit
+when
+.I subprogram
+exits,
+with the same exit code.
+
+.B ptyspawn
+must be invoked with descriptor 4 pointing to the pty master,
+descriptor 5 pointing to the pty slave,
+and environment variable TTY
+giving the name of the pty slave.
+On POSIX systems,
+.B ptyspawn
+must not be a process group leader.
+
+If
+.I subprogram
+stops,
+.B ptyspawn
+writes its stop signal, as a single byte, to descriptor 9,
+if descriptor 9 is open.
+When
+.B ptyspawn
+receives a
+SIGCONT
+signal, it sends
+SIGCONT
+to
+.IR subprogram 's
+process group.
+
+.I subprogram
+will have descriptors 0, 1, and 2 pointing to the pty slave.
+Its controlling tty will be that pty.
+Descriptor 3 will point to
+.BR /dev/tty .
+Descriptors 4, 5, and 9 will be closed.
+.I subprogram
+will be a process group leader.
+.SH OPTIONS
+.TP
+.B \-2
+Preserve descriptor 2 in
+.IR subprogram ;
+do not replace it with the pty slave.
+.TP
+.B \-3
+Preserve descriptor 3 in
+.IR subprogram ;
+do not replace it with /dev/tty.
+.TP
+.B \-x
+Reserve the pty for exclusive use.
+This prevents all attempts to open the pty,
+even through /dev/tty.
+.SH "SEE ALSO"
+ptyget(8)

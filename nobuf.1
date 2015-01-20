@@ -1,0 +1,51 @@
+.TH nobuf 1
+.SH NAME
+nobuf \- run a program without stdio block buffering
+.SH SYNOPSIS
+.B nobuf
+.I subprogram
+[
+.I args ...
+]
+.SH DESCRIPTION
+.B nobuf
+.I subprogram
+is similar to
+.IR subprogram ,
+with one exception.
+If
+.I subprogram
+uses stdio, it will use block buffering rather than line buffering
+when its output is redirected;
+.B nobuf
+.I subprogram
+will always use line buffering.
+
+Internally,
+.B nobuf
+obtains a new pty and runs
+.I subprogram
+under it,
+transparently forwarding input and output.
+.B nobuf
+initializes the pty to remote mode,
+where tty processing is disabled,
+input is flow-controlled,
+and
+end-of-file is passed through to
+.IR subprogram .
+
+.B nobuf
+is a synonym for
+.B ptyget
+.B ptyio \-r
+.B ptyspawn \-23x\fR.
+Any
+.B ptyspawn
+options may be used with
+.BR nobuf .
+.SH "SEE ALSO"
+ptyrun(1),
+ptyget(8),
+ptyio(8),
+ptyspawn(8)

@@ -1,0 +1,41 @@
+Things you have to decide before starting:
+
+* The ptyget home directory, normally /usr/local. Binaries will be
+stored in /usr/local/bin; man pages will be installed in /usr/local/man.
+(To change this directory, edit conf-home.h now.)
+
+* Whether you want secure pty allocation. The default is yes; the ptyget
+program will be setuid root and will guarantee that one user can't touch
+another user's ptys. There are three situations where you will have to
+change the default:
+
+   (1) You do not have privileges on this machine, so you cannot install
+       ptyget setuid root.
+
+   (2) You are using an operating system where ptyget cannot guarantee
+       security. ptyget.c will refuse to compile in this case.
+
+   (3) You have other, non-setuid programs that need to allocate ptys.
+       (In this case, your security is already toast.) If ptyget is
+       installed setuid root, it will interfere with these programs,
+       since it never changes slaves to mode 666.
+
+(If you are in one of these situations, edit conf-secure.h now.)
+
+
+How to install:
+
+ 1. Create the ptyget home directory, if it doesn't already exist:
+       # mkdir /usr/local; chmod 755 /usr/local
+ 2. Compile the programs and format the man pages:
+       # make
+ 3. Install the programs and man pages:
+       # make setup
+
+How to test:
+
+ 4. XXX
+
+
+That's it! To report success:
+       % cat `cat SYSDEPS` | mail djb-qst@koobera.math.uic.edu

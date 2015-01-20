@@ -1,0 +1,109 @@
+.TH ptybandage 1
+.SH NAME
+ptybandage \- wrap a transparent pty around a program
+.SH SYNOPSIS
+.B ptybandage
+.I subprogram
+[
+.I args ...
+]
+.SH DESCRIPTION
+.B ptybandage
+obtains a new pty and runs
+.I subprogram
+under it.
+This has the following effects:
+.TP
+.B *
+Descriptors 0, 1, and 2
+of
+.I subprogram
+are redirected to the pty.
+.BR ptybandage 's
+input
+is transparently
+forwarded to the pty's input;
+the pty's output is transparently forwarded to
+.BR ptybandage 's
+output.
+.TP
+.B *
+The pty's mode is set to the mode of
+.BR ptybandage 's
+controlling tty.
+Meanwhile, 
+.BR ptybandage 's
+controlling tty is set to raw mode.
+.TP
+.B *
+When
+.I subprogram
+exits,
+.B ptybandage
+exits with the same exit code,
+after restoring the mode of its controlling tty.
+.TP
+.B *
+If
+.I subprogram
+stops,
+.B ptybandage
+stops with the same signal,
+temporarily restoring the mode of its controlling tty.
+When
+.B ptybandage
+continues,
+.IR subprogram 's
+process group will receive a SIGCONT.
+.TP
+.B *
+.B ptybandage
+forwards window-size changes to the pty.
+.TP
+.B *
+The controlling tty of
+.I subprogram
+is replaced with the pty.
+.TP
+.B *
+As an added bonus,
+.B ptybandage
+gives
+.I subprogram
+descriptor 3 pointing to /dev/tty,
+and an environment variable TTY
+giving the name of the pty.
+Beware:
+.B ptybandage
+also closes descriptors 4, 5, and 9.
+.PP
+.B ptybandage
+is useful for handling programs that refuse to run inside a pipe.
+As far as
+.I subprogram
+can see, it is talking to a tty.
+.B ptybandage
+doesn't mind being put inside a pipe.
+
+.B ptybandage
+also fools
+.BR isatty .
+If
+.I subprogram
+uses stdio, its output will be line-buffered.
+
+.B ptybandage
+is a synonym for
+.B ptyget
+.B ptyio \-t
+.BR ptyspawn .
+Any
+.B ptyspawn
+options may be used with
+.BR ptybandage .
+.SH "SEE ALSO"
+ptyrun(1),
+isatty(3),
+ptyget(8),
+ptyio(8),
+ptyspawn(8)

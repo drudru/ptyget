@@ -1,0 +1,157 @@
+.TH ptyio 8
+.SH NAME
+ptyio \- feed input to a pty and print its output
+.SH SYNOPSIS
+.B ptyio
+[
+.B \-tTr
+]
+.I subprogram
+[
+.I args ...
+]
+.SH DESCRIPTION
+.B ptyio
+copies its input to the master side of a pty.
+Meanwhile, it prints all output that shows up from the master.
+
+.B ptyio
+runs
+.I subprogram
+as a child process (not a process group leader).
+It supplies a ``job control'' pipe to
+.I subprogram
+as descriptor 9.
+After the pipe closes,
+.B ptyio
+will wait for
+.I subprogram
+to exit; then
+.B ptyio
+will exit with the same exit code.
+
+If
+.B ptyio
+reaches EOF or sees an error on its input,
+it stops reading input, but it continues printing output.
+If
+.B ptyio
+sees an error on its output,
+it sends SIGPIPE to
+.I subprogram
+and stops writing output.
+
+.B ptyio
+must be invoked with descriptor 4 pointing to the pty master and
+descriptor 5 pointing to the pty slave.
+It passes these descriptors to
+.IR subprogram .
+It must also be invoked with
+environment variable TTY
+giving the name of the pty slave.
+It passes this variable to
+.IR subprogram .
+.SH "OPTIONS"
+.TP
+.B \-t
+Attached to a tty.
+.B ptyio
+must be attached to a tty in one of the following places:
+descriptor 3; /dev/tty; descriptor 2; descriptor 0; descriptor 1.
+Before running
+.IR subprogram ,
+.B ptyio
+sets the attached tty to raw mode,
+and copies the original mode to the pty.
+Before exiting,
+.B ptyio
+restores the original mode of the attached tty.
+
+Whenever
+.I subprogram
+writes a byte to the job control pipe,
+.B ptyio
+stops itself,
+using the stop signal given by that byte.
+It restores the mode of the attached tty before stopping.
+After
+.B ptyio
+continues,
+it sets the attached tty to raw mode again,
+and then sends SIGCONT to
+.IR subprogram .
+
+.B ptyio
+passes window-size changes through to the pty.
+
+Many programs handle tty modes incorrectly when they are run
+in the background;
+for example, try
+
+.EX
+   (sleep 2;vi) &; vi
+.EE
+
+.B ptyio
+handles this situation correctly.
+.TP
+.B \-T
+(Default.) Not attached to a tty.
+Before running
+.IR subprogram ,
+.B ptyio
+sets the pty mode to sane mode.
+Whenever
+.I subprogram
+writes a byte to the job control pipe,
+.B ptyio
+sends
+SIGCONT
+to
+.IR subprogram .
+.TP
+.B \-r
+Remote mode.
+Before running
+.IR subprogram ,
+.B ptyio
+sets the pty mode to raw mode,
+and enables TIOCREMOTE on the master.
+After reaching end of file on standard input,
+.B ptyio
+writes 0-byte packets to the pty master,
+which (with correct TIOCREMOTE implementations)
+produces end-of-file for any program reading the pty slave.
+.SH "RAW MODE"
+Raw mode eliminates input echoing, input line buffering, input line editing,
+input signals (control-C producing SIGINT, control-Z producing
+SIGTSTP, etc.), output conversion of LF to CR LF, and
+XON/XOFF flow control.
+It is, unfortunately, not completely clean:
+if too much tty input arrives at once, the kernel will discard characters.
+.SH "SANE MODE"
+Sane mode supports input echoing, input line buffering,
+input signals,
+input conversion of CR to LF,
+8-bit input,
+output conversion of LF to CR LF,
+and XON/XOFF flow control.
+It supports the following keys:
+delete for ERASE,
+control-backslash for QUIT,
+control-C for INTR,
+control-D for EOF,
+control-O for DISCARD,
+control-R for REPRINT,
+control-T for STATUS,
+control-U for KILL,
+control-V for LNEXT,
+control-W for WERASE,
+control-Y for DSUSP,
+and
+control-Z for SUSP.
+.SH "SEE ALSO"
+ptyrun(1),
+ptybandage(1),
+ptyget(8),
+ptyspawn(8)

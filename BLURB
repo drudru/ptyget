@@ -1,0 +1,23 @@
+ptyget is a universal pseudo-terminal interface. It is designed to be
+used by any program that needs a pty.
+
+ptyget can also serve as a wrapper to improve the behavior of existing
+programs. For example, ``ptybandage telnet'' is like ``telnet'' but can
+be put into a pipeline. ``nobuf grep'' is like ``grep'' but won't
+block-buffer if it's redirected.
+
+Previous pty-allocating programs---rlogind, telnetd, sshd, xterm,
+screen, emacs, expect, etc.---have caused dozens of security problems.
+There are two fundamental reasons for this. First, these programs are
+installed setuid root so that they can allocate ptys; this turns every
+little bug in hundreds of thousands of lines of code into a potential
+security hole. Second, these programs are not careful enough to protect
+the pty from access by other users.
+
+ptyget solves both of these problems. All the privileged code is in one
+tiny program. This program guarantees that one user can't touch another
+user's pty.
+
+ptyget is a complete rewrite of pty 4.0, my previous pty-allocating
+package. pty 4.0's session management features have been split off into
+a separate package, sess.
